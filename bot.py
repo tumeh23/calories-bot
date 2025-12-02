@@ -1,9 +1,9 @@
+# bot.py
 import telebot
 
 API_TOKEN = "8515664991:AAHVVZBWStgWPWeT1iXO97ewA0gGrc2cEsE"
 bot = telebot.TeleBot(API_TOKEN)
 
-# نخزن بيانات كل مستخدم مؤقتاً
 user_data = {}
 
 @bot.message_handler(commands=['start'])
@@ -48,7 +48,7 @@ def get_gender(message):
     gender = message.text.lower()
     if gender in ['male', 'm', 'ذكر', 'female', 'f', 'أنثى']:
         user_data[chat_id]['gender'] = gender
-        bot.send_message(chat_id, "Write your activity multiplier (e.g., 1.2, 1.375, 1.55, 1.725, 1.9):")
+        bot.send_message(chat_id, "Write your activity multiplier:")
         bot.register_next_step_handler(message, get_activity)
     else:
         bot.send_message(chat_id, "Please enter 'male' or 'female':")
@@ -58,7 +58,7 @@ def get_activity(message):
     chat_id = message.chat.id
     try:
         activity = float(message.text)
-        if activity < 1 or activity > 2:  # غالباً 1.2-1.9
+        if activity < 1 or activity > 2:
             raise ValueError
         user_data[chat_id]['activity'] = activity
         send_result(chat_id)
@@ -85,5 +85,5 @@ def send_result(chat_id):
     bot.send_message(chat_id, reply)
     bot.send_message(chat_id, "Calculation done! You can start again with /start if you want.")
 
-if __name__ == "__main__":
+def run_bot():
     bot.infinity_polling()
